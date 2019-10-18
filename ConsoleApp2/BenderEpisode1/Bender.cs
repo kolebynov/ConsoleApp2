@@ -16,26 +16,23 @@ namespace ConsoleApp2.BenderEpisode1
 
 		public IEnumerator<string> GetEnumerator()
 		{
-			var state = new BenderState(map);
+			var state = new BenderState((Map)map.Clone());
 
 			while (true)
 			{
-				state.Map[state.CurrentPosition].Apply(state);
+				state.CurrentCell.Apply(state);
 				if (!state.IsAlive)
 				{
 					yield break;
 				}
 
-				var nextPosition = state.CurrentDirection.GetNextPosition(state.CurrentPosition);
-				var nextCell = state.Map[nextPosition];
-				if (!nextCell.CanGo(state))
+				if (!state.NextCell.CanGo(state))
 				{
 					state.CurrentDirection = state.DirectionPriority
 						.First(x => state.Map[x.GetNextPosition(state.CurrentPosition)].CanGo(state));
-					nextPosition = state.CurrentDirection.GetNextPosition(state.CurrentPosition);
 				}
 
-				state.CurrentPosition = nextPosition;
+				state.CurrentPosition = state.NextPosition;
 				yield return state.CurrentDirection.Name;
 			}
 		}
@@ -55,6 +52,12 @@ namespace ConsoleApp2.BenderEpisode1
 			public bool IsAlive { get; set; } = true;
 
 			public Map Map { get; }
+
+			public Cell CurrentCell => Map[CurrentPosition];
+
+			public Point NextPosition => CurrentDirection.GetNextPosition(CurrentPosition);
+
+			public Cell NextCell => Map[NextPosition];
 
 			public BenderState(Map map)
 			{

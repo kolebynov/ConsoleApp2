@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace ConsoleApp2.BenderEpisode1
 {
-	public class Map : IEnumerable<Cell>
+	public class Map : IEnumerable<Cell>, ICloneable
 	{
 		private readonly Cell[,] cells;
 
@@ -68,6 +68,11 @@ namespace ConsoleApp2.BenderEpisode1
 			}
 
 			return new Map(cells);
+		}
+
+		public object Clone()
+		{
+			return new Map((Cell[,])cells.Clone());
 		}
 	}
 }
