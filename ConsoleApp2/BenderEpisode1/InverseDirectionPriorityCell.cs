@@ -4,9 +4,9 @@ namespace ConsoleApp2.BenderEpisode1
 {
 	public class InverseDirectionPriorityCell : Cell
 	{
-		public override void Apply(Bender.BenderStateMachine benderStateMachine)
+		public override void Apply(Bender.BenderState benderState)
 		{
-			benderStateMachine.DirectionPriority = benderStateMachine.DirectionPriority.Reverse().ToList();
+			benderState.DirectionPriority = benderState.DirectionPriority.Reverse().ToList();
 		}
 	}
 }

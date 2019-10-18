@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace ConsoleApp2.BenderEpisode1
 {
@@ -13,17 +14,37 @@ namespace ConsoleApp2.BenderEpisode1
 			this.map = map;
 		}
 
-		public IEnumerator<string> GetEnumerator() => new BenderStateMachine(map);
+		public IEnumerator<string> GetEnumerator()
+		{
+			var state = new BenderState(map);
+
+			while (true)
+			{
+				state.Map[state.CurrentPosition].Apply(state);
+				if (!state.IsAlive)
+				{
+					yield break;
+				}
+
+				var nextPosition = state.CurrentDirection.GetNextPosition(state.CurrentPosition);
+				var nextCell = state.Map[nextPosition];
+				if (!nextCell.CanGo(state))
+				{
+					state.CurrentDirection = state.DirectionPriority
+						.First(x => state.Map[x.GetNextPosition(state.CurrentPosition)].CanGo(state));
+					nextPosition = state.CurrentDirection.GetNextPosition(state.CurrentPosition);
+				}
+
+				state.CurrentPosition = nextPosition;
+				yield return state.CurrentDirection.Name;
+			}
+		}
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-		public class BenderStateMachine : IEnumerator<string>
+		public class BenderState
 		{
 			public Point CurrentPosition { get; set; }
-
-			public string Current => CurrentDirection.Name;
-
-			object IEnumerator.Current => Current;
 
 			public BenderMode BenderMode { get; set; }
 
@@ -35,39 +56,15 @@ namespace ConsoleApp2.BenderEpisode1
 
 			public Map Map { get; }
 
-			public BenderStateMachine(Map map)
+			public BenderState(Map map)
 			{
 				Map = map;
-				Reset();
-			}
-
-			public bool MoveNext()
-			{
-				Map[CurrentPosition].Apply(this);
-				var nextPosition = CurrentDirection.GetNextPosition(CurrentPosition);
-				var nextCell = Map[nextPosition];
-				if (!nextCell.CanGo(this))
-				{
-					CurrentDirection =
-						DirectionPriority[(DirectionPriority.IndexOf(CurrentDirection) + 1) % DirectionPriority.Count];
-					nextPosition = CurrentDirection.GetNextPosition(CurrentPosition);
-				}
-
-				return IsAlive;
-			}
-
-			public void Reset()
-			{
 				CurrentPosition = Map.StartCellPosition;
 				DirectionPriority = new List<Direction>
 				{
 					Direction.South, Direction.East, Direction.North, Direction.West
 				};
 				CurrentDirection = DirectionPriority[0];
-			}
-
-			public void Dispose()
-			{
 			}
 		}
 	}

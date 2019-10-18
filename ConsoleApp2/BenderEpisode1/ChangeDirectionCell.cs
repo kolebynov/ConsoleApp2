@@ -9,9 +9,9 @@
 			this.newDirection = newDirection;
 		}
 
-		public override void Apply(Bender.BenderStateMachine benderStateMachine)
+		public override void Apply(Bender.BenderState benderState)
 		{
-			benderStateMachine.CurrentDirection = newDirection;
+			benderState.CurrentDirection = newDirection;
 		}
 	}
 }

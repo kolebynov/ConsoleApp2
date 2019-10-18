@@ -4,22 +4,9 @@ namespace ConsoleApp2.BenderEpisode1
 {
 	public abstract class Cell
 	{
-		protected static readonly StartCell StartCell = new StartCell();
-		protected static readonly EndCell EndCell = new EndCell();
-		protected static readonly HardObstacleCell HardObstacleCell = new HardObstacleCell();
-		protected static readonly SoftObstacleCell SoftObstacleCell = new SoftObstacleCell();
-		protected static readonly ChangeDirectionCell SouthChangeDirectionCell = new ChangeDirectionCell();
-		protected static readonly ChangeDirectionCell NorthChangeDirectionCell = new ChangeDirectionCell();
-		protected static readonly ChangeDirectionCell WestChangeDirectionCell = new ChangeDirectionCell();
-		protected static readonly ChangeDirectionCell EastChangeDirectionCell = new ChangeDirectionCell();
-		protected static readonly InverseDirectionPriorityCell InverseDirectionPriorityCell = new InverseDirectionPriorityCell();
-		protected static readonly BearCell BearCell = new BearCell();
-		protected static readonly TeleportCell TeleportCell = new TeleportCell();
-		protected static readonly EmptyCell EmptyCell = new EmptyCell();
+		public virtual bool CanGo(Bender.BenderState benderState) => true;
 
-		public virtual bool CanGo(Bender.BenderStateMachine benderStateMachine) => true;
-
-		public virtual void Apply(Bender.BenderStateMachine benderStateMachine)
+		public virtual void Apply(Bender.BenderState benderState)
 		{
 		}
 
@@ -28,29 +15,29 @@ namespace ConsoleApp2.BenderEpisode1
 			switch (charCell)
 			{
 				case '@':
-					return StartCell;
+					return new StartCell();
 				case '$':
-					return EndCell;
+					return new EndCell();
 				case '#':
-					return HardObstacleCell;
+					return new HardObstacleCell();
 				case 'X':
-					return SoftObstacleCell;
+					return new SoftObstacleCell();
 				case 'S':
-					return SouthChangeDirectionCell;
+					return new ChangeDirectionCell(Direction.South);
 				case 'N':
-					return NorthChangeDirectionCell;
+					return new ChangeDirectionCell(Direction.North);
 				case 'W':
-					return WestChangeDirectionCell;
+					return new ChangeDirectionCell(Direction.West);
 				case 'E':
-					return EastChangeDirectionCell;
+					return new ChangeDirectionCell(Direction.East);
 				case 'I':
-					return InverseDirectionPriorityCell;
+					return new InverseDirectionPriorityCell();
 				case 'B':
-					return BearCell;
+					return new BearCell();
 				case 'T':
-					return TeleportCell;
+					return new TeleportCell();
 				case ' ':
-					return EmptyCell;
+					return new EmptyCell();
 				default:
 					throw new ArgumentException("Invalid char", nameof(charCell));
 			}

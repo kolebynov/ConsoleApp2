@@ -4,11 +4,11 @@ namespace ConsoleApp2.BenderEpisode1
 {
 	public class SoftObstacleCell : Cell
 	{
-		public override void Apply(Bender.BenderStateMachine benderStateMachine)
+		public override void Apply(Bender.BenderState benderState)
 		{
-			if (benderStateMachine.BenderMode == BenderMode.Breaker)
+			if (benderState.BenderMode == BenderMode.Breaker)
 			{
-				benderStateMachine.Map[benderStateMachine.CurrentPosition] = EmptyCell;
+				benderState.Map[benderState.CurrentPosition] = new EmptyCell();
 			}
 			else
 			{
@@ -16,6 +16,6 @@ namespace ConsoleApp2.BenderEpisode1
 			}
 		}
 
-		public override bool CanGo(Bender.BenderStateMachine benderStateMachine) => benderStateMachine.BenderMode == BenderMode.Breaker;
+		public override bool CanGo(Bender.BenderState benderState) => benderState.BenderMode == BenderMode.Breaker;
 	}
 }

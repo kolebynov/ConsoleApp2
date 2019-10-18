@@ -2,9 +2,9 @@
 {
 	public class EndCell : Cell
 	{
-		public override void Apply(Bender.BenderStateMachine benderStateMachine)
+		public override void Apply(Bender.BenderState benderState)
 		{
-			benderStateMachine.IsAlive = false;
+			benderState.IsAlive = false;
 		}
 	}
 }

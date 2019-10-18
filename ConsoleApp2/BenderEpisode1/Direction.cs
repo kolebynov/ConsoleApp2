@@ -16,6 +16,8 @@ namespace ConsoleApp2.BenderEpisode1
 
 		public Point GetNextPosition(Point currentPosition) => nextPositionFunc(currentPosition);
 
+		public override string ToString() => Name;
+
 		private Direction(string name, Func<Point, Point> nextPositionFunc)
 		{
 			Name = name;

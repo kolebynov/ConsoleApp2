@@ -4,15 +4,15 @@ namespace ConsoleApp2.BenderEpisode1
 {
 	public class BearCell : Cell
 	{
-		public override void Apply(Bender.BenderStateMachine benderStateMachine)
+		public override void Apply(Bender.BenderState benderState)
 		{
-			switch (benderStateMachine.BenderMode)
+			switch (benderState.BenderMode)
 			{
 				case BenderMode.Normal:
-					benderStateMachine.BenderMode = BenderMode.Breaker;
+					benderState.BenderMode = BenderMode.Breaker;
 					break;
 				case BenderMode.Breaker:
-					benderStateMachine.BenderMode = BenderMode.Normal;
+					benderState.BenderMode = BenderMode.Normal;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

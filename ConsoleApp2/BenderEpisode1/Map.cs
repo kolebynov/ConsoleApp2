@@ -1,37 +1,21 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace ConsoleApp2.BenderEpisode1
 {
-	public class Map
+	public class Map : IEnumerable<Cell>
 	{
 		private readonly Cell[,] cells;
 
 		public Map(Cell[,] cells)
 		{
 			this.cells = cells;
-			for (int i = 0; i < cells.GetLength(0); i++)
-			{
-				for (int j = 0; j < cells.GetLength(1); j++)
-				{
-					if (cells[i, j] is StartCell)
-					{
-						StartCellPosition = new Point(j, i);
-						break;
-					}
-				}
-
-				if (StartCellPosition != default)
-				{
-					break;
-				}
-			}
+			StartCellPosition = Find(x => x is StartCell);
 		}
 
 		public Point StartCellPosition { get; }
-
-		public int Width => cells.GetLength(1);
-
-		public int Height => cells.GetLength(0);
 
 		public Cell this[Point position]
 		{
@@ -39,11 +23,44 @@ namespace ConsoleApp2.BenderEpisode1
 			set => cells[position.Y, position.X] = value;
 		}
 
+		public IEnumerator<Cell> GetEnumerator()
+		{
+			for (int i = 0; i < cells.GetLength(0); i++)
+			{
+				for (int j = 0; j < cells.GetLength(1); j++)
+				{
+					yield return cells[i, j];
+				}
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public Point Find(Predicate<Cell> predicate)
+		{
+			for (int i = 0; i < cells.GetLength(0); i++)
+			{
+				for (int j = 0; j < cells.GetLength(1); j++)
+				{
+					if (predicate(cells[i, j]))
+					{
+						return new Point(j, i);
+					}
+				}
+			}
+
+			return new Point(-1, -1);
+		}
+
 		public static Map Parse(string[] stringMap)
 		{
 			var cells = new Cell[stringMap.Length, stringMap[0].Length];
 			for (int i = 0; i < cells.GetLength(0); i++)
 			{
+				Console.Error.WriteLine(stringMap[i]);
 				for (int j = 0; j < cells.GetLength(1); j++)
 				{
 					cells[i, j] = Cell.GetCell(stringMap[i][j]);
