@@ -17,6 +17,8 @@ namespace ConsoleApp2.BenderEpisode1
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
+
+			base.Apply(benderState);
 		}
 	}
 }

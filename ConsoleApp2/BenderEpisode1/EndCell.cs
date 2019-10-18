@@ -5,6 +5,7 @@
 		public override void Apply(Bender.BenderState benderState)
 		{
 			benderState.IsAlive = false;
+			base.Apply(benderState);
 		}
 	}
 }

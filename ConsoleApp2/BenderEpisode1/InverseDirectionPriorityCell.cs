@@ -7,6 +7,7 @@ namespace ConsoleApp2.BenderEpisode1
 		public override void Apply(Bender.BenderState benderState)
 		{
 			benderState.DirectionPriority = benderState.DirectionPriority.Reverse().ToList();
+			base.Apply(benderState);
 		}
 	}
 }

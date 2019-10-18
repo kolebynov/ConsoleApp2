@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace ConsoleApp2.BenderEpisode1
 {
@@ -13,14 +14,25 @@ namespace ConsoleApp2.BenderEpisode1
 		{
 			this.cells = cells;
 			StartCellPosition = Find(x => x is StartCell);
+			SoftObstacleCellCount = this.Count(x => x is SoftObstacleCell);
 		}
 
 		public Point StartCellPosition { get; }
 
+		public int SoftObstacleCellCount { get; private set; }
+
 		public Cell this[Point position]
 		{
 			get => cells[position.Y, position.X];
-			set => cells[position.Y, position.X] = value;
+			set
+			{
+				if (cells[position.Y, position.X] is SoftObstacleCell && !(value is SoftObstacleCell))
+				{
+					SoftObstacleCellCount--;
+				}
+
+				cells[position.Y, position.X] = value;
+			}
 		}
 
 		public IEnumerator<Cell> GetEnumerator()
@@ -70,9 +82,14 @@ namespace ConsoleApp2.BenderEpisode1
 			return new Map(cells);
 		}
 
-		public object Clone()
+		public Map Clone()
 		{
 			return new Map((Cell[,])cells.Clone());
+		}
+
+		object ICloneable.Clone()
+		{
+			return Clone();
 		}
 	}
 }

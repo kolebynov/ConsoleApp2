@@ -12,6 +12,7 @@
 		public override void Apply(Bender.BenderState benderState)
 		{
 			benderState.CurrentDirection = newDirection;
+			base.Apply(benderState);
 		}
 	}
 }

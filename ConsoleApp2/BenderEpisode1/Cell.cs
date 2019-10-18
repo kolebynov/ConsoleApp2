@@ -1,13 +1,30 @@
 ﻿using System;
+using System.Linq;
 
 namespace ConsoleApp2.BenderEpisode1
 {
 	public abstract class Cell
 	{
+		private int visitedCount;
+
 		public virtual bool CanGo(Bender.BenderState benderState) => true;
 
 		public virtual void Apply(Bender.BenderState benderState)
 		{
+			visitedCount++;
+
+			if (visitedCount == 3)
+			{
+				var reversed = benderState.PreviousSteps.Reverse();
+				var firstLoop = reversed.TakeWhile(x => !x.Equals((benderState.CurrentPosition, benderState.CurrentDirection)));
+				var secondLoop = reversed
+					.SkipWhile(x => !x.Equals((benderState.CurrentPosition, benderState.CurrentDirection)))
+					.Skip(1)
+					.TakeWhile(x => !x.Equals((benderState.CurrentPosition, benderState.CurrentDirection)));
+				benderState.IsLoop = firstLoop.SequenceEqual(secondLoop);
+			}
+
+			benderState.PreviousSteps.Add((benderState.CurrentPosition, benderState.CurrentDirection));
 		}
 
 		public static Cell GetCell(char charCell)

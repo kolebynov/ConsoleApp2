@@ -16,24 +16,31 @@ namespace ConsoleApp2.BenderEpisode1
 
 		public IEnumerator<string> GetEnumerator()
 		{
-			var state = new BenderState((Map)map.Clone());
+			var state = new BenderState(map.Clone());
+			var directions = new List<string>();
 
 			while (true)
 			{
 				state.CurrentCell.Apply(state);
+
+				if (state.IsLoop)
+				{
+					return new List<string> { "LOOP" }.GetEnumerator();
+				}
+
 				if (!state.IsAlive)
 				{
-					yield break;
+					return directions.GetEnumerator();
 				}
 
 				if (!state.NextCell.CanGo(state))
 				{
 					state.CurrentDirection = state.DirectionPriority
-						.First(x => state.Map[x.GetNextPosition(state.CurrentPosition)].CanGo(state));
+						.First(direction => state.Map[direction.GetNextPosition(state.CurrentPosition)].CanGo(state));
 				}
 
 				state.CurrentPosition = state.NextPosition;
-				yield return state.CurrentDirection.Name;
+				directions.Add(state.CurrentDirection.Name);
 			}
 		}
 
@@ -51,6 +58,8 @@ namespace ConsoleApp2.BenderEpisode1
 
 			public bool IsAlive { get; set; } = true;
 
+			public bool IsLoop { get; set; } = false;
+
 			public Map Map { get; }
 
 			public Cell CurrentCell => Map[CurrentPosition];
@@ -58,6 +67,8 @@ namespace ConsoleApp2.BenderEpisode1
 			public Point NextPosition => CurrentDirection.GetNextPosition(CurrentPosition);
 
 			public Cell NextCell => Map[NextPosition];
+
+			public IList<(Point position, Direction direction)> PreviousSteps { get; } = new List<(Point position, Direction direction)>();
 
 			public BenderState(Map map)
 			{
