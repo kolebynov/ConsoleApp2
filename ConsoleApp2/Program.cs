@@ -10,12 +10,9 @@ namespace ConsoleApp2
 	{
 		public static void Main()
 		{
-			var res = Snail(new int[4][]
+			var res = Snail(new int[1][]
 			{
-				new[] { 1, 2, 3, 4 },
-				new[] { 12, 13, 14, 5 },
-				new[] { 11, 16, 15, 6 },
-				new[] { 10, 9, 8, 7 },
+				new int[0]
 			});
 		}
 
@@ -35,6 +32,11 @@ namespace ConsoleApp2
 
 			public IEnumerator<int> GetEnumerator()
 			{
+				if (sourceArray[0].Length == 0)
+				{
+					yield break;
+				}
+
 				var state = new State(sourceArray.Length);
 
 				while (true)
