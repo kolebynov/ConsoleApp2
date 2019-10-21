@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using ConsoleApp2.BenderEpisode1;
-using Solution;
 
 namespace ConsoleApp2
 {
@@ -9,7 +7,16 @@ namespace ConsoleApp2
 	{
 		public static void Main()
 		{
-			var a = Fibonacci.fib(500000);
+			Console.SetIn(new StringReader(
+@"4 4 1
+0 1
+0 2
+1 3
+2 3
+3
+0
+2"));
+			SkynetRevolutionEpisode1.Run();
 		}
 	}
 }
