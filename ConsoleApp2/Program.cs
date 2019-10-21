@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ConsoleApp2.BenderEpisode1;
+using Solution;
 
 namespace ConsoleApp2
 {
@@ -8,8 +9,7 @@ namespace ConsoleApp2
 	{
 		public static void Main()
 		{
-			Console.SetIn(new StreamReader(@"..\..\..\BenderEpisode1\BenderTest.txt"));
-			BenderRunner.Run();
+			var a = Fibonacci.fib(500000);
 		}
 	}
 }
